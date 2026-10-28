@@ -1,0 +1,14 @@
+{% extends "templates/web.html" %}
+
+{% block title %}{{ _("Payment") }}{% endblock %}
+
+{% block page_content %}
+<div class="apg-page" style="max-width: 34rem; margin: 2rem auto; text-align: center;">
+	{% if ok %}
+		<h2>{{ _("Payment received") }}</h2>
+	{% else %}
+		<h2>{{ _("Payment not completed") }}</h2>
+	{% endif %}
+	<p class="text-muted">{{ message }}</p>
+</div>
+{% endblock %}

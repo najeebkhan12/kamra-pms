@@ -1,0 +1,29 @@
+{% extends "templates/web.html" %}
+
+{% block title %}{{ _("Secure payment") }}{% endblock %}
+
+{% block page_content %}
+<div class="apg-page" style="max-width: 34rem; margin: 2rem auto; text-align: center;">
+	{% if error %}
+		<h2>{{ _("Payment unavailable") }}</h2>
+		<p class="text-muted">{{ error }}</p>
+	{% elif test_mode %}
+		<h2>{{ _("Test payment link") }}</h2>
+		<p class="text-muted">
+			{{ _("This property is in test mode, so no card is charged. Mark the folio paid from the front desk.") }}
+		</p>
+	{% else %}
+		<h2>{{ _("Taking you to the secure payment page…") }}</h2>
+		<p class="text-muted">{{ _("Please wait a moment. Do not close this window.") }}</p>
+		<form id="apg-checkout" method="post" action="{{ form_url }}">
+			{% for key, value in fields.items() %}
+				<input type="hidden" name="{{ key }}" value="{{ value }}">
+			{% endfor %}
+			<noscript>
+				<button type="submit" class="btn btn-primary">{{ _("Continue to payment") }}</button>
+			</noscript>
+		</form>
+		<script>document.getElementById("apg-checkout").submit();</script>
+	{% endif %}
+</div>
+{% endblock %}

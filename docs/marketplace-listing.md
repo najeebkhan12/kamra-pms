@@ -126,12 +126,14 @@ is pulled in automatically.
   booking confirmations, check-in links, desk payment requests and a
   conversations inbox.
 - **Localization** — country packs resolved per property: India GST
-  (slabs), Saudi VAT with ZATCA e-invoicing (Phase 1) and room levy,
-  Indonesia PB1, Thailand VAT, Malaysia SST, UAE VAT (TRN), and a flat-tax
-  generic for everywhere else. Tax, invoices, ID types, payment modes and
-  statutory integrations follow the pack — India gets Razorpay and
-  Cashfree payment links, GSTR-1 and GSTIN / guest ID verification. English
-  and Arabic (RTL) interface.
+  (slabs) and Pakistan provincial sales tax on services, Saudi VAT with
+  ZATCA e-invoicing (Phase 1) and room levy, Indonesia PB1, Thailand VAT,
+  Malaysia SST, UAE VAT (TRN), and a flat-tax generic for everywhere else.
+  Tax, invoices, ID types, payment modes and statutory integrations follow
+  the pack — India gets Razorpay and Cashfree payment links, GSTR-1 and
+  GSTIN / guest ID verification, Pakistan gets APG (Bank Alfalah) payment
+  links. English and Arabic (RTL) interface, with the privacy notice also
+  in Urdu.
 - **Platform** — multi-property with per-user property scoping enforced on
   every record, six-role RBAC, webhooks that refuse unsigned calls, dark
   mode, property time zone, System Health diagnostics, AI provider presets

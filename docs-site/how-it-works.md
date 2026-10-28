@@ -226,7 +226,7 @@ flowchart LR
 
 | Integration | Path |
 | --- | --- |
-| Payments / links | `payments` app + India Razorpay / Cashfree packs |
+| Payments / links | `payments` app + Razorpay / Cashfree (India) and APG (Pakistan) packs |
 | WhatsApp | Meta Cloud API on your number - [guide](/whatsapp) |
 | Channel manager | ARI push / webhooks - [guide](/channel-manager) |
 | Webhooks out | Signed outbound events (bookings, night audit, …) |

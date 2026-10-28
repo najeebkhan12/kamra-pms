@@ -26,6 +26,7 @@ TENS = ("", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy",
 # back to the bare code, which still reads correctly: "USD Twelve Only".
 CURRENCY_WORDS = {
 	"INR": ("Rupees", "Paise"),
+	"PKR": ("Rupees", "Paisa"),
 	"USD": ("Dollars", "Cents"),
 	"EUR": ("Euros", "Cents"),
 	"GBP": ("Pounds", "Pence"),

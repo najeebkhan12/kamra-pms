@@ -32,6 +32,9 @@ interface Spec {
   type?: "text" | "number" | "time" | "check" | "select" | "textarea" | "password" | "image"
   options?: string[]
   hint?: string
+  /** Show this field only when the form's current values satisfy this - used
+   *  to show each gateway only its own credential fields. */
+  when?: (doc: Doc) => boolean
 }
 
 function Field(props: {
@@ -126,6 +129,8 @@ export function SettingsCard(props: {
   const [state, setState] = useState<"idle" | "saved" | string>("idle")
 
   const value = (f: string) => (f in draft ? draft[f] : props.doc[f])
+  const effective: Doc = { ...props.doc, ...draft }
+  const specs = props.specs.filter((s) => !s.when || s.when(effective))
 
   async function save() {
     setBusy(true)
@@ -157,7 +162,7 @@ export function SettingsCard(props: {
             props.columns === 1 ? "space-y-3" : "grid gap-3 sm:grid-cols-2"
           }
         >
-          {props.specs.map((s) => (
+          {specs.map((s) => (
             <Field
               key={s.field}
               spec={s}
@@ -288,6 +293,8 @@ export function ZatcaCard({ property }: { property: string }) {
 
 /** The gateways on offer come from the property's country pack. */
 function gatewaySpecs(gateways: string[]): Spec[] {
+  const apg = (d: Doc) => d.gateway === "APG"
+  const notApg = (d: Doc) => d.gateway !== "APG"
   return [
     { field: "enabled", label: "Enabled", type: "check" },
     {
@@ -306,14 +313,53 @@ function gatewaySpecs(gateways: string[]): Spec[] {
     {
       field: "key_id",
       label: "Key ID / App ID",
+      when: notApg,
       hint: "Razorpay: Account & Settings → API Keys. Cashfree: Developers → API Keys (App ID)",
     },
-    { field: "key_secret", label: "Key secret / Secret key", type: "password" },
+    { field: "key_secret", label: "Key secret / Secret key", type: "password", when: notApg },
     {
       field: "webhook_secret",
       label: "Webhook secret",
       type: "password",
+      when: notApg,
       hint: "Razorpay only: set the same secret on the Razorpay webhook. Cashfree signs with the secret key",
+    },
+    {
+      field: "apg_merchant_id",
+      label: "Merchant ID",
+      when: apg,
+      hint: "Bank Alfalah APG merchant portal → Go Live → Access Sandbox → Integration",
+    },
+    { field: "apg_store_id", label: "Store ID", when: apg },
+    { field: "apg_merchant_hash", label: "Merchant hash", when: apg },
+    { field: "apg_merchant_username", label: "Merchant username", when: apg },
+    {
+      field: "apg_merchant_password",
+      label: "Merchant password",
+      type: "password",
+      when: apg,
+      hint: "stored, and never shown back - leave blank to keep it",
+    },
+    {
+      field: "apg_key1",
+      label: "AES Key 1",
+      type: "password",
+      when: apg,
+      hint: "the RequestHash encryption key APG issued - stored, leave blank to keep it",
+    },
+    {
+      field: "apg_key2",
+      label: "AES Key 2 (IV)",
+      type: "password",
+      when: apg,
+      hint: "stored, and never shown back - leave blank to keep it",
+    },
+    {
+      field: "apg_sandbox",
+      label: "Sandbox",
+      type: "check",
+      when: apg,
+      hint: "off = live Bank Alfalah payments",
     },
   ]
 }
@@ -346,10 +392,16 @@ function GatewayHelp({ property, gateway, hasKeys }: {
           {t("No {gateway} account yet?", { gateway: info.gateway })}{" "}
           <a className="font-medium text-brand-700 underline" href={info.signup_url}
              target="_blank" rel="noopener">{t("Create one free")}</a>
-          {" "}{t("and take UPI, cards and netbanking for advances and bills.")}
+          {" "}{t("and take card and online payments for advances and bills.")}
         </p>
       )}
-      {info.needs_webhook ? (
+      {gateway === "APG" ? (
+        <p>
+          {t("In the Bank Alfalah APG merchant portal, set the Listener URL to")}{" "}
+          <code className="select-all break-all rounded bg-white px-1 py-0.5 text-xs">{info.webhook_url}</code>
+          . {t("Bank Alfalah must whitelist that URL before payment updates arrive.")}
+        </p>
+      ) : info.needs_webhook ? (
         <p>
           {t("In Razorpay, add a webhook for the payment_link.paid event pointing to")}{" "}
           <code className="select-all break-all rounded bg-white px-1 py-0.5 text-xs">{info.webhook_url}</code>
@@ -757,8 +809,14 @@ export function PaymentsSection({ property }: { property: string }) {
   const loc = useLocale()
   const [gateway, setGateway] = useState<Doc | null>(null)
   const load = useCallback(() => {
+    // Everything the card shows back. Secrets (key_secret,
+    // apg_merchant_password, apg_key1/apg_key2) are deliberately not read:
+    // Frappe only returns a mask for them, and a blank field means
+    // "unchanged" rather than "not saved".
     listResource("Payment Gateway Settings", {
-      fields: ["name", "gateway", "enabled", "test_mode", "key_id"],
+      fields: ["name", "gateway", "enabled", "test_mode", "key_id",
+               "apg_merchant_id", "apg_store_id", "apg_merchant_hash",
+               "apg_merchant_username", "apg_sandbox"],
       filters: [["property", "=", property]],
     }).then((rows) => setGateway(rows[0] ?? {}))
   }, [property])
@@ -782,13 +840,19 @@ export function PaymentsSection({ property }: { property: string }) {
         title={translateUI("Payment gateway")}
         description={translateUI("Payment links for advances and folio settlement. Money goes straight to this property's own account. Secrets are write-only.")}
         specs={gatewaySpecs(gateways)}
-        doc={{ ...gateway, gateway: gateway.gateway || gateways[0] }}
+        doc={{
+          ...gateway,
+          gateway: gateway.gateway || gateways[0],
+          // a fresh APG config starts in the sandbox, as the doctype default does
+          apg_sandbox: gateway.apg_sandbox ?? 1,
+        }}
         onSave={async (changes) => {
           // never send empty secrets - blank means "unchanged"
           const payload = Object.fromEntries(
             Object.entries(changes).filter(
               ([k, v]) =>
-                !["key_secret", "webhook_secret"].includes(k) || v !== "",
+                !["key_secret", "webhook_secret", "apg_merchant_password",
+                  "apg_key1", "apg_key2"].includes(k) || v !== "",
             ),
           )
           if (gateway.name) {
@@ -806,7 +870,7 @@ export function PaymentsSection({ property }: { property: string }) {
       <GatewayHelp
         property={property}
         gateway={gateways.includes(String(gateway.gateway)) ? String(gateway.gateway) : gateways[0]}
-        hasKeys={!!gateway.key_id}
+        hasKeys={!!(gateway.key_id || gateway.apg_merchant_id)}
       />
     </div>
   )

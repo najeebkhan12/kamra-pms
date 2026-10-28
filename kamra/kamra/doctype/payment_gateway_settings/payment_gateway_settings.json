@@ -17,7 +17,17 @@
   "key_id",
   "column_break_b",
   "key_secret",
-  "webhook_secret"
+  "webhook_secret",
+  "sb_apg",
+  "apg_merchant_id",
+  "apg_store_id",
+  "apg_merchant_hash",
+  "column_break_apg",
+  "apg_merchant_username",
+  "apg_merchant_password",
+  "apg_key1",
+  "apg_key2",
+  "apg_sandbox"
  ],
  "fields": [
   {
@@ -33,9 +43,9 @@
    "fieldname": "gateway",
    "fieldtype": "Select",
    "in_list_view": 1,
-   "description": "Offered by the property's country pack (India: Razorpay, Cashfree)",
+   "description": "Offered by the property's country pack (India: Razorpay, Cashfree; Pakistan: APG)",
    "label": "Gateway",
-   "options": "Razorpay\nCashfree"
+   "options": "Razorpay\nCashfree\nAPG"
   },
   {
    "fieldname": "column_break_a",
@@ -58,6 +68,7 @@
    "label": "Test Mode"
   },
   {
+   "depends_on": "eval:doc.gateway != \"APG\"",
    "fieldname": "sb_keys",
    "fieldtype": "Section Break",
    "label": "API Keys"
@@ -85,12 +96,67 @@
    "fieldname": "webhook_secret",
    "fieldtype": "Password",
    "label": "Webhook Secret"
+  },
+  {
+   "depends_on": "eval:doc.gateway == \"APG\"",
+   "description": "From the APG merchant portal: Go Live \u2192 Access Sandbox \u2192 Integration \u2192 Page Redirection",
+   "fieldname": "sb_apg",
+   "fieldtype": "Section Break",
+   "label": "APG (Bank Alfalah) credentials"
+  },
+  {
+   "fieldname": "apg_merchant_id",
+   "fieldtype": "Data",
+   "label": "Merchant ID"
+  },
+  {
+   "fieldname": "apg_store_id",
+   "fieldtype": "Data",
+   "label": "Store ID"
+  },
+  {
+   "fieldname": "apg_merchant_hash",
+   "fieldtype": "Data",
+   "label": "Merchant Hash"
+  },
+  {
+   "fieldname": "column_break_apg",
+   "fieldtype": "Column Break",
+   "label": "Column Break APG"
+  },
+  {
+   "fieldname": "apg_merchant_username",
+   "fieldtype": "Data",
+   "label": "Merchant Username"
+  },
+  {
+   "fieldname": "apg_merchant_password",
+   "fieldtype": "Password",
+   "label": "Merchant Password"
+  },
+  {
+   "description": "The RequestHash encryption key APG issued (AES Key1 / Key2)",
+   "fieldname": "apg_key1",
+   "fieldtype": "Password",
+   "label": "AES Key 1"
+  },
+  {
+   "fieldname": "apg_key2",
+   "fieldtype": "Password",
+   "label": "AES Key 2 (IV)"
+  },
+  {
+   "default": "1",
+   "description": "On = Bank Alfalah's sandbox. Off = live payments.",
+   "fieldname": "apg_sandbox",
+   "fieldtype": "Check",
+   "label": "Sandbox"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-10-09 12:00:00.000000",
+ "modified": "2026-10-27 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "Kamra",
  "name": "Payment Gateway Settings",

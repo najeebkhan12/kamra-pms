@@ -8,6 +8,7 @@ import ml from "../i18n/notice/ml.json"
 import mr from "../i18n/notice/mr.json"
 import ta from "../i18n/notice/ta.json"
 import te from "../i18n/notice/te.json"
+import ur from "../i18n/notice/ur.json"
 
 
 /** Who a guest complains to and the statutory guest report the hotel files
@@ -41,7 +42,11 @@ const NOTICE: Record<string, { label: string; dict: Record<string, string> }> = 
   ml: { label: "മലയാളം", dict: ml },
   mr: { label: "मराठी", dict: mr },
   bn: { label: "বাংলা", dict: bn },
+  ur: { label: "اردو", dict: ur },
 }
+
+/** Notice languages written right to left. */
+const RTL_NOTICE = new Set(["ur"])
 
 function browserNoticeLang(offered: string[]): string {
   for (const l of navigator.languages ?? [navigator.language]) {
@@ -78,7 +83,11 @@ export default function PrivacyNotice({
   const months = Number(retentionMonths || 0)
   const authority = terms.privacy_authority || "your local data protection authority"
   return (
-    <details className="text-xs text-zinc-500" lang={lang || undefined}>
+    <details
+      className="text-xs text-zinc-500"
+      lang={lang || undefined}
+      dir={RTL_NOTICE.has(lang) ? "rtl" : undefined}
+    >
       <summary className="cursor-pointer select-none">
         {t("{property} uses your details for this stay.", { property: propertyName })}{" "}
         <span className="underline">{t("Privacy notice")}</span>

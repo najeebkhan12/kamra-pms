@@ -579,7 +579,7 @@ export default function BookingEngine() {
                       />
                     </label>
                   )}
-                  <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800">{translate("Online collection uses the payment gateway set under Settings → Payments, where your country offers one (India: Razorpay or Cashfree). Until a gateway is connected, the advance is recorded as due and settled at the desk.")}</div>
+                  <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800">{translate("Online collection uses the payment gateway set under Settings → Payments, where your country offers one (India: Razorpay or Cashfree; Pakistan: APG). Until a gateway is connected, the advance is recorded as due and settled at the desk.")}</div>
                 </div>
               )}
 

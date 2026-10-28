@@ -285,10 +285,12 @@ through Channex.io, STAAH or AioSell. See
 ## Payments
 
 Advances and folio balances can be paid by payment link. This is
-available where the country pack supports a gateway, for example
-Razorpay or Cashfree in India. The gateway calls Kamra back with a signed
-webhook, and Kamra records the payment on the folio. Set it up in
-**Settings → Payments**.
+available where the country pack supports a gateway — Razorpay or Cashfree
+in India, APG (Bank Alfalah) in Pakistan. The gateway calls Kamra back, and
+Kamra checks the event against the gateway itself before recording the
+payment on the folio: a signed webhook where the gateway signs (Razorpay,
+Cashfree), and its own order-status API where it does not (APG). Set it up
+in **Settings → Payments**.
 
 ## Door locks
 

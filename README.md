@@ -131,7 +131,7 @@ We never charge for rooms, users, features, data export or API access. An **ente
 - **Deterministic money.** Rates, tax slabs, availability, and no-overbooking guards come from code, never from a language model.
 - **Full audit trail.** Every human or AI action: who, what, why.
 - **Privacy by design.** DPDP / GDPR-friendly defaults: ID verify-and-discard, erasure and access export, retention for guests and messages, children's data kept to name and age, and guest contact details kept out of AI prompts.
-- **Country packs.** Tax, invoices, ID types, payment gateways and statutory reports per country. India's Razorpay, Cashfree and GSTR-1 never reach a Saudi hotel, which gets ZATCA instead.
+- **Country packs.** Tax, invoices, ID types, payment gateways and statutory reports per country. India's Razorpay, Cashfree and GSTR-1 never reach a Pakistani hotel, which gets APG (Bank Alfalah) instead; neither reaches a Saudi hotel, which gets ZATCA.
 - **Built on Frappe.** RBAC, multi-tenancy, Desk escape hatch, ERPNext-adjacent ecosystem (Company and stock work alongside Kamra).
 
 ---
@@ -189,7 +189,7 @@ Live example: [demo.kamrapms.com/book](https://demo.kamrapms.com/book).
 | **Short-term rentals** | Hotel vs STR property kind, sellable units, per-villa locations, whole-villa check-in as one unit, villa / room availability that blocks both ways, security deposits, Instant / Request-to-book |
 | **Booking** | Multi-room / group / corporate, returning guests, add-ons, vouchers, travel agents, day-use from the booking screen, rate lock at booking |
 | **Revenue** | Seasons, rate plans, guardrails, hurdle rates, overbooking allowance, cancellation & no-show policy in code |
-| **Billing** | Folios, corporate routing, group masters, charge splits, deposits, End of Day (night audit checklist + saved report pack, Night Auditor role), city-ledger payments (oldest bills first), tax invoices, cashier till (FO+POS cash, PIN pad), folio ledger; India: Razorpay / Cashfree payment links and GSTR-1 |
+| **Billing** | Folios, corporate routing, group masters, charge splits, deposits, End of Day (night audit checklist + saved report pack, Night Auditor role), city-ledger payments (oldest bills first), tax invoices, cashier till (FO+POS cash, PIN pad), folio ledger; India: Razorpay / Cashfree payment links and GSTR-1; Pakistan: APG payment links |
 | **F&B** | POS table map, full-screen till and kitchen pass, split bills, thermal KOT, kitchen display, inventory & recipes, room posting |
 | **Operations** | Tickets + SLA, housekeeping `/hk`, guest laundry end-to-end, lost & found, banquet / events (send quote, guest response, dept checklists) |
 | **Guests** | Online pre-check-in, GRC + occupant register, **editable nationality**, ID retention modes |
@@ -210,6 +210,7 @@ integrations are never offered in another.
 | Country | Tax on rooms and F&B | Invoices and filings | Front desk and integrations |
 |---|---|---|---|
 | 🇮🇳 India | GST slab by nightly tariff (5% / 18% around ₹7,500) or fixed; F&B 5% | CGST + SGST or IGST from the GSTIN, SAC per line, amount in lakh / crore, GSTR-1 export | Aadhaar, PAN, Voter ID; UPI; Razorpay and Cashfree payment links; Form C for foreign guests; notice in 7 Indian languages |
+| 🇵🇰 Pakistan | Provincial sales tax on services, flat per property (SRB 13% / KPRA 15% / PRA 16% / BRA 15%) | Single "Sales Tax" line, NTN on the invoice, amount in lakh / crore | CNIC; APG (Bank Alfalah) payment links; police register for foreign guests; notice in Urdu |
 | 🇸🇦 Saudi Arabia | VAT 15%; municipality fee as a room levy | ZATCA Phase 1: UUID, hash chain, UBL 2.1 XML and QR on every invoice and POS bill; Phase 2 groundwork | National ID, Iqama, GCC ID; Shomoos register (children's IDs kept too); Arabic UI |
 | 🇦🇪 UAE | VAT 5%; municipality fee as a room levy | TRN on "Tax Invoice" | Emirates ID, GCC ID |
 | 🇲🇾 Malaysia | SST 8% on rooms, 6% on F&B | Tourism Tax note for foreign guests | MyKad |

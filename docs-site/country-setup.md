@@ -8,11 +8,11 @@ create the property selects its *localization pack*, and the pack decides:
 | Money | currency, number format, tax name (GST, VAT, SST, PB1…) and the tax-ID label on invoices |
 | Front desk | the **ID documents** the desk and guest self check-in accept, the **ways to pay** offered at the counter, POS and till |
 | Levies | the name of the per-night room levy (e.g. *Municipality fee*) |
-| Guests | the default nationality, the data-protection authority named in the privacy notice, the languages that notice is offered in (India: Hindi, Kannada, Tamil, Telugu, Malayalam, Marathi, Bengali), and whether a child's ID is kept (by default only for foreign nationals; Saudi Arabia: always, for Shomoos) |
+| Guests | the default nationality, the data-protection authority named in the privacy notice, the languages that notice is offered in (India: Hindi, Kannada, Tamil, Telugu, Malayalam, Marathi, Bengali; Pakistan: Urdu), and whether a child's ID is kept (by default only for foreign nationals; Saudi Arabia: always, for Shomoos) |
 | Invoices | the invoice title and, where the law requires it, e-invoicing (Saudi Arabia: ZATCA) |
 
-Packs today: **India, Indonesia, Malaysia, Saudi Arabia, Thailand, United
-Arab Emirates**. Any other country runs on a simple flat-tax pack with the
+Packs today: **India, Pakistan, Indonesia, Malaysia, Saudi Arabia, Thailand,
+United Arab Emirates**. Any other country runs on a simple flat-tax pack with the
 currency you enter.
 
 ## Choosing the country
@@ -27,6 +27,7 @@ currency you enter.
 | Country | ID types | Payment methods |
 | --- | --- | --- |
 | India | Aadhaar, Passport, Driving License, Voter ID, PAN | Cash, Card, UPI, Bank Transfer |
+| Pakistan | CNIC, Passport, Driving License | Cash, Card, Bank Transfer |
 | Saudi Arabia | National ID, Iqama, Passport, GCC ID | Cash, Card (incl. mada), Bank Transfer |
 | UAE | Emirates ID, Passport, GCC ID, Driving License | Cash, Card, Bank Transfer |
 | Indonesia | KTP, Passport, KITAS, Driving License | Cash, Card (incl. QRIS), Bank Transfer |
@@ -43,6 +44,7 @@ buttons are hidden and the API refuses the call.
 | Country | Online payment links | Tax return export | Statutory reporting |
 | --- | --- | --- | --- |
 | India | Razorpay, Cashfree | GSTR-1 (`gstr1_rows`) | Form C for foreign nationals (named in the privacy notice) |
+| Pakistan | APG (Bank Alfalah) | - | Guest registration with the police for foreign nationals (named in the privacy notice) |
 | Saudi Arabia | - | - | ZATCA e-invoicing (below); Shomoos guest registration (named in the privacy notice) |
 | Indonesia, Malaysia, Thailand, UAE, Other | - | - | - |
 
@@ -62,6 +64,28 @@ property. *Test mode* creates links that charge nothing, for training.
 
 Every payment confirmation is signature-checked, in test mode too. A paid
 link posts to the bill once, however often the gateway retries.
+
+### Pakistan: payment links (APG)
+
+*Settings → Payments*. Pick **APG** and enter your Bank Alfalah credentials
+from the merchant portal (*Go Live → Access Sandbox → Integration → Page
+Redirection*): Merchant ID, Store ID, Merchant hash, Merchant username,
+Merchant password and the two AES keys APG issues. Leave **Sandbox** on
+while you are testing and turn it off to take live payments. *Test mode*
+creates links that charge nothing, for training.
+
+APG works by redirection rather than a hosted link, so Kamra's link opens a
+small page on your own site that hands the guest to APG's secure checkout;
+the card is only ever entered there. In the APG merchant portal set the
+**Listener URL** to
+`https://<your-site>/api/method/kamra.payments.apg_webhook`, and ask your
+Bank Alfalah business owner to whitelist it — status updates do not arrive
+until they do.
+
+APG sends no signature, so Kamra never trusts the callback for the amount:
+it asks APG for the order's status and posts the money only when APG
+answers *00 / Paid*. If a guest closes the browser on APG's page, the link
+can be reopened and a paid order still settles.
 
 ## Room levy (municipality fee, city tax)
 

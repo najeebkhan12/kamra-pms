@@ -145,6 +145,16 @@ def cashfree_webhook():
 	return _webhook("Cashfree")
 
 
+@frappe.whitelist(allow_guest=True, methods=["POST"])
+def apg_webhook():
+	"""APG posts its Instant Payment Notification here - set this as the
+	Listener URL in the Bank Alfalah merchant portal. APG signs nothing, so
+	the payload only names the order and the money is confirmed by asking
+	APG for the order's status (kamra.localization.pakistan.alfa).
+	Point the listener at /api/method/kamra.payments.apg_webhook"""
+	return _webhook("APG")
+
+
 @frappe.whitelist()
 @require_roles("Hotel Admin", "Finance")
 def gateway_info(property: str, gateway: str = "") -> dict:
