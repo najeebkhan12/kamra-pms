@@ -229,7 +229,7 @@ def handshake(settings, *, amount, currency: str, reference: str,
 	resp = requests.post(_hs_url(settings), data=hs, timeout=30,
 	                     allow_redirects=False)
 	data = _json_body(resp)
-	frappe.log_error(title="APG Response: ", message=str(hs))
+	frappe.log_error(title="APG Response: ", message=str(data))
 	if str(data.get("success")).lower() != "true" or not data.get("AuthToken"):
 		frappe.throw("APG refused the handshake: "
 		             + (data.get("ErrorMessage") or _describe(resp)))
