@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Kamra — self-host install (get the image, then compose up).
 #
-#   curl -fsSL https://raw.githubusercontent.com/Kamra-PMS/kamra-pms/main/deploy/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/najeebkhan12/kamra-pms/main/deploy/install.sh | bash
 #
 # Or: clone the repo, cd deploy, ./install.sh
 #
@@ -12,7 +12,7 @@
 #                    RAM+swap (a swap file is added when short). Also the
 #                    path for forks / a custom apps.json (KAMRA_APPS_JSON=).
 #   pull (opt-in)    KAMRA_PULL=1 (or KAMRA_TAG=…): pull the prebuilt
-#                    ghcr.io/kamra-pms/kamra:stable, resolve `stable` to the
+#                    najeebkhan12/kamra:stable, resolve `stable` to the
 #                    concrete release (e.g. v2.6.16) and pin it, so restarts
 #                    never float. Needs registry access: while the package is
 #                    private, `docker login ghcr.io` first (a token with
@@ -35,7 +35,7 @@
 # Env:
 #   KAMRA_PULL    1 = pull the prebuilt image instead of building
 #   KAMRA_TAG     tag to pull (implies pull): stable (default), vX.Y.Z, nightly
-#   KAMRA_IMAGE   default ghcr.io/kamra-pms/kamra (pull) / kamra (build)
+#   KAMRA_IMAGE   default najeebkhan12/kamra (pull) / kamra (build)
 #   KAMRA_BUILD   1 = build locally (wins over KAMRA_PULL / KAMRA_TAG)
 #   KAMRA_PULL_FALLBACK  0 = fail instead of building when the pull is refused
 #
@@ -57,7 +57,7 @@ case "$MODE" in
 esac
 
 # How a fresh install gets its image when nothing else says: build | pull.
-# Flip to `pull` once ghcr.io/kamra-pms/kamra is public.
+# Flip to `pull` once najeebkhan12/kamra is public.
 DEFAULT_MODE=build
 
 INSTALL_DIR="${INSTALL_DIR:-/opt/kamra}"
@@ -67,7 +67,7 @@ APPS_JSON="$INSTALL_DIR/apps.json"
 # pinned tag). Read on every run so `update` follows what was installed.
 IMAGE_STATE="$INSTALL_DIR/image.env"
 
-PUBLIC_IMAGE="ghcr.io/kamra-pms/kamra"
+PUBLIC_IMAGE="najeebkhan12/kamra"
 LOCAL_IMAGE="kamra"
 LOCAL_TAG="local"
 
@@ -118,7 +118,7 @@ else
 fi
 KAMRA_PINNED="${KAMRA_TAG}"
 
-KAMRA_GIT_URL="${KAMRA_GIT_URL:-https://github.com/Kamra-PMS/kamra-pms}"
+KAMRA_GIT_URL="${KAMRA_GIT_URL:-https://github.com/najeebkhan12/kamra-pms}"
 KAMRA_BRANCH_OVERRIDE="${KAMRA_BRANCH:-}"
 KAMRA_BRANCH="${KAMRA_BRANCH:-main}"
 KAMRA_APPS_JSON="${KAMRA_APPS_JSON:-}"
@@ -404,7 +404,7 @@ install_self() {
   if [ -n "$SELF" ] && [ "$SELF" != "$INSTALL_DIR/install.sh" ]; then
     cp "$SELF" "$INSTALL_DIR/install.sh" && chmod +x "$INSTALL_DIR/install.sh"
   elif [ ! -f "$INSTALL_DIR/install.sh" ]; then
-    curl -fsSL https://raw.githubusercontent.com/Kamra-PMS/kamra-pms/main/deploy/install.sh \
+    curl -fsSL https://raw.githubusercontent.com/najeebkhan12/kamra-pms/main/deploy/install.sh \
       -o "$INSTALL_DIR/install.sh" && chmod +x "$INSTALL_DIR/install.sh" || true
   fi
 }
