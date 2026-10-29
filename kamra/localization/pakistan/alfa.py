@@ -59,12 +59,12 @@ SIGNUP_URL = "https://www.bankalfalah.com/digital-banking/alfa-payment-gateway/"
 HS_HASH_FIELDS = (
 	"HS_ChannelId", "HS_IsRedirectionRequest", "HS_ReturnURL", "HS_MerchantId",
 	"HS_StoreId", "HS_MerchantHash", "HS_MerchantUsername",
-	"HS_MerchantPassword", "HS_TransactionReferenceNumber",
+	"HS_MerchantPassword", "HS_TransactionReferenceNumber", "HS_RequestHash",
 )
 SSO_HASH_FIELDS = (
 	"AuthToken", "ChannelId", "Currency", "ReturnURL", "MerchantId",
 	"StoreId", "MerchantHash", "MerchantUsername", "MerchantPassword",
-	"TransactionTypeId", "TransactionReferenceNumber", "TransactionAmount",
+	"TransactionTypeId", "TransactionReferenceNumber", "TransactionAmount", "RequestHash",
 )
 
 
@@ -219,6 +219,7 @@ def handshake(settings, *, amount, currency: str, reference: str,
 		"HS_ReturnURL": return_url,
 		**_merchant_fields(settings),
 		"HS_TransactionReferenceNumber": reference,
+		"HS_RequestHash": "",
 	}
 	hs["HS_RequestHash"] = request_hash(settings, hs, HS_HASH_FIELDS)
 
@@ -247,6 +248,7 @@ def handshake(settings, *, amount, currency: str, reference: str,
 		"MerchantHash": hs["HS_MerchantHash"],
 		"MerchantUsername": hs["HS_MerchantUsername"],
 		"MerchantPassword": hs["HS_MerchantPassword"],
+		"RequestHash": ""
 	}
 	sso["RequestHash"] = request_hash(settings, sso, SSO_HASH_FIELDS)
 	return data["AuthToken"], _sso_url(settings), sso
